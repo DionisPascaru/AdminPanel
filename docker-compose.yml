@@ -7,7 +7,7 @@ services:
             - "./data/database/data:/var/lib/mysql"
             - "./data/database/data/config:/etc/mysql/conf.d"
         ports:
-            - "3308:3306"
+            - "3309:3306"
         environment:
             - MYSQL_ROOT_PASSWORD=root
         networks:
@@ -25,21 +25,6 @@ services:
             - "882:22"
         volumes:
             - "/home/dionis/PersonalProjects/admin-panel:/var/www/html"
-        environment:
-            - APP_URL=http://myproject.com
-            - MAIL_HOST=backend-mailhog
-            - MAIL_USERNAME=null
-            - MAIL_PASSWORD=null
-            - MAIL_ENCRYPTION=null
-            - MAIL_PORT=1025
-            - MAIL_FROM_ADDRESS=denis.pascaru95@gmail.com
-            - MAIL_NAME="PHR API"
-            - MAIL_DELAY=2500
-            - DB_HOST=backend-db
-            - DB_DATABASE=backend_db
-            - DB_USERNAME=root
-            - DB_PASSWORD=root
-            - DB_PORT=3306
         networks:
             - backend
         restart: unless-stopped
