@@ -8,6 +8,14 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 
+//Element-ui library
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import VueRouter from "vue-router";
+
+Vue.use(ElementUI);
+Vue.use(VueRouter);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
