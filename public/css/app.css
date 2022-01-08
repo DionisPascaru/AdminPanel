@@ -11286,3 +11286,15 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+aside {
+  width: 300px;
+  height: 100vh;
+}
+
+.left-menu {
+  background-color: #4f5050;
+  height: 100%;
+}
+.left-menu p {
+  color: #fff;
+}
