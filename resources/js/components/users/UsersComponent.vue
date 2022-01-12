@@ -4,6 +4,9 @@
 
 <script>
 export default {
-    name: 'Users'
+    name: 'Users',
+    mounted() {
+        this.$store.dispatch("loadStudents");
+    }
 }
 </script>
