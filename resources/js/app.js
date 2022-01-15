@@ -12,16 +12,11 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import VueRouter from 'vue-router';
 import router from './router/index';
-import Vuex from 'vuex';
-import storeData from './store/index';
+import store from './store'
 
 Vue.use(ElementUI);
 Vue.use(VueRouter);
-Vue.use(Vuex);
 
-const store = new Vuex.Store(
-    storeData
-)
 
 // Vue.component('dashboard', require('./components/Dashboard.vue').default);
 
