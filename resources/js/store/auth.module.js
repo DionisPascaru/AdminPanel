@@ -1,11 +1,5 @@
 import AuthService from '../services/auth/auth.service';
 
-// const user = JSON.parse(localStorage.getItem('user'));
-// const initialState = user
-//   ? { status: { loggedIn: true }, user }
-//   : { status: { loggedIn: false }, user: null };
-
-console.log('test')
 const state = {
     user: {},
     status: {
@@ -15,7 +9,6 @@ const state = {
 
 const actions = {
     login({commit}, user) {
-        console.log('login dispatch ...')
         return AuthService.login(user).then(
             user => {
                 commit('loginSuccess', user);

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import UserService from '../../services/user/user.service'
+import httpClient from '../../services/httpRequest';
 
 export default {
     name: 'Users',
@@ -19,7 +19,7 @@ export default {
             });
         },
         loadStudents(){
-            UserService.getUserBoard().then(
+            httpClient.get('students').then(
                 response => {
                     this.content = response.data;
                 },

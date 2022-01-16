@@ -6955,7 +6955,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _services_user_user_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/user/user.service */ "./resources/js/services/user/user.service.js");
+/* harmony import */ var _services_httpRequest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/httpRequest */ "./resources/js/services/httpRequest.js");
 //
 //
 //
@@ -6977,7 +6977,7 @@ __webpack_require__.r(__webpack_exports__);
     loadStudents: function loadStudents() {
       var _this = this;
 
-      _services_user_user_service__WEBPACK_IMPORTED_MODULE_0__["default"].getUserBoard().then(function (response) {
+      _services_httpRequest__WEBPACK_IMPORTED_MODULE_0__["default"].get('students').then(function (response) {
         _this.content = response.data;
       }, function (error) {
         _this.content = error.response.data.message;
@@ -7096,33 +7096,6 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
 
 /***/ }),
 
-/***/ "./resources/js/services/auth/auth-header.js":
-/*!***************************************************!*\
-  !*** ./resources/js/services/auth/auth-header.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ authHeader)
-/* harmony export */ });
-function authHeader() {
-  var user = JSON.parse(localStorage.getItem('user'));
-  console.log(user);
-
-  if (user && user.token) {
-    console.log('Token successfully added.');
-    return {
-      Authorization: 'Bearer ' + user.token
-    };
-  } else {
-    return {};
-  }
-}
-
-/***/ }),
-
 /***/ "./resources/js/services/auth/auth.service.js":
 /*!****************************************************!*\
   !*** ./resources/js/services/auth/auth.service.js ***!
@@ -7157,10 +7130,8 @@ var AuthService = /*#__PURE__*/function () {
         email: user.email,
         password: user.password
       }).then(function (response) {
-        console.log("response: ", response);
-
         if (response.data.data.token) {
-          localStorage.setItem('user', JSON.stringify(response.data.data));
+          localStorage.setItem('accessToken', JSON.stringify(response.data.data.token));
         }
 
         return response.data.data;
@@ -7189,10 +7160,10 @@ var AuthService = /*#__PURE__*/function () {
 
 /***/ }),
 
-/***/ "./resources/js/services/user/user.service.js":
-/*!****************************************************!*\
-  !*** ./resources/js/services/user/user.service.js ***!
-  \****************************************************/
+/***/ "./resources/js/services/httpRequest.js":
+/*!**********************************************!*\
+  !*** ./resources/js/services/httpRequest.js ***!
+  \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7202,45 +7173,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _auth_auth_header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../auth/auth-header */ "./resources/js/services/auth/auth-header.js");
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+var httpClient = axios__WEBPACK_IMPORTED_MODULE_0___default().create({
+  baseURL: 'http://localhost:88/api/',
+  headers: {
+    Accept: "application/json;charset=UTF-8",
+    "Content-Type": "application/json;charset=UTF-8"
+  },
+  timeout: 0
+});
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+var authInterceptor = function authInterceptor(config) {
+  var token = JSON.parse(localStorage.getItem('accessToken'));
 
-
-
-var API_URL = 'http://localhost:88/api/';
-
-var UserService = /*#__PURE__*/function () {
-  function UserService() {
-    _classCallCheck(this, UserService);
+  if (token) {
+    config.headers["Authorization"] = 'Bearer ' + token;
   }
 
-  _createClass(UserService, [{
-    key: "getUserBoard",
-    value: // getPublicContent() {
-    //   return axios.get(API_URL + 'students');
-    // }
-    function getUserBoard() {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default().get(API_URL + 'students', {
-        headers: (0,_auth_auth_header__WEBPACK_IMPORTED_MODULE_1__["default"])()
-      });
-    } // getModeratorBoard() {
-    //   return axios.get(API_URL + 'mod', { headers: authHeader() });
-    // }
-    //
-    // getAdminBoard() {
-    //   return axios.get(API_URL + 'admin', { headers: authHeader() });
-    // }
+  return config;
+};
 
-  }]);
+var responseInterceptor = function responseInterceptor(response) {
+  return response.data;
+};
 
-  return UserService;
-}();
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new UserService());
+httpClient.interceptors.request.use(authInterceptor);
+httpClient.interceptors.response.use(responseInterceptor);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (httpClient);
 
 /***/ }),
 
@@ -7256,12 +7215,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _services_auth_auth_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/auth/auth.service */ "./resources/js/services/auth/auth.service.js");
- // const user = JSON.parse(localStorage.getItem('user'));
-// const initialState = user
-//   ? { status: { loggedIn: true }, user }
-//   : { status: { loggedIn: false }, user: null };
 
-console.log('test');
 var state = {
   user: {},
   status: {
@@ -7271,7 +7225,6 @@ var state = {
 var actions = {
   login: function login(_ref, user) {
     var commit = _ref.commit;
-    console.log('login dispatch ...');
     return _services_auth_auth_service__WEBPACK_IMPORTED_MODULE_0__["default"].login(user).then(function (user) {
       commit('loginSuccess', user);
       return Promise.resolve(user);
