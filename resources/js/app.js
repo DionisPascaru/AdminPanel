@@ -13,12 +13,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 import VueRouter from 'vue-router';
 import router from './router/index';
 import store from './store'
-
+import Login from './components/auth/Login';
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 
-
-// Vue.component('dashboard', require('./components/Dashboard.vue').default);
+Vue.component('login', Login);
 
 const app = new Vue({
     router,
